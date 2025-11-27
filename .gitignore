@@ -1,0 +1,33 @@
+# --- Python General ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+dist/
+wheels/
+*.egg-info/
+.egg
+
+# --- Virtual Environments ---
+.venv/
+venv/
+ENV/
+
+# --- Environment Variables ---
+.env
+.env.local
+
+# --- OS Junk Files ---
+.DS_Store
+Thumbs.db
+
+# --- Testing & Type Checking ---
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# --- IDE Settings ---
+.vscode/
+.idea/

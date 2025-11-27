@@ -1,0 +1,15 @@
+[project]
+name = "real-time-sign-language-translator"
+version = "0.1.0"
+description = "A real time sign language translator"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "mediapipe>=0.10.14",
+    "opencv-python-headless>=4.12.0.88",
+    "streamlit>=1.51.0",
+    "streamlit-webrtc>=0.64.4",
+    "torch>=2.9.1",
+    "torchvision>=0.24.1",
+    "watchdog>=6.0.0",
+]
