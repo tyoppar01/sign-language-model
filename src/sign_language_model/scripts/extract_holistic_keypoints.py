@@ -16,41 +16,31 @@ BBOX_EXPAND = 1.1  # Expand by 10%
 
 
 def extract_xy(results):
+    # out: (V, C) = (75, 3), where C = coords, V = keypoints
     if results.left_hand_landmarks is None and results.right_hand_landmarks is None:
         return None
 
-    pose = (
-        np.array(
-            [
-                [res.x, res.y, res.z, res.visibility]
-                for res in results.pose_landmarks.landmark
-            ]
-        ).flatten()
-        if results.pose_landmarks
-        else np.zeros(33 * 4)
-    )  # visibility is included for pose keypoints, as they might not be visible sometimes
+    def _get(lms, n):
+        if lms is None:
+            return np.zeros((n, 3), dtype=np.float32)
+        return np.array([[lm.x, lm.y, lm.z] for lm in lms.landmark], dtype=np.float32)
 
-    lh = (
-        np.array(
-            [[res.x, res.y, res.z] for res in results.left_hand_landmarks.landmark]
-        ).flatten()
-        if results.left_hand_landmarks
-        else np.zeros(21 * 3)
-    )  # if the code is here, visibility must be 1, so we can ignore it to not add into the dimension
+    pose = _get(results.pose_landmarks, 33)  # (33, 3)
+    lh = _get(results.left_hand_landmarks, 21)  # (21, 3)
+    rh = _get(results.right_hand_landmarks, 21)  # (21, 3)
 
-    rh = (
-        np.array(
-            [[res.x, res.y, res.z] for res in results.right_hand_landmarks.landmark]
-        ).flatten()
-        if results.right_hand_landmarks
-        else np.zeros(21 * 3)
-    )  # if the code is here, visibility must be 1, so we can ignore it to not add into the dimension
+    assert pose.shape == (33, 3)
+    assert lh.shape == (21, 3)
+    assert rh.shape == (21, 3)
 
-    return np.concatenate([pose, lh, rh])  # (75*3 + 33,) -> (258,)
+    out = np.concatenate([pose, lh, rh], axis=0)  # (75, 3)
+    return out
 
 
 def sample_and_pad(frames, target_frames=32):
     """Sample and pad frames to target_frames length."""
+    # in: (T, V, C)
+    # out: (target_frames, V, C)
     num_frames = frames.shape[0]
 
     if num_frames >= target_frames:
@@ -58,9 +48,9 @@ def sample_and_pad(frames, target_frames=32):
         return frames[indices]
 
     # Last pad the keypoints
-    pad = np.repeat(frames[-1][np.newaxis, :], target_frames - num_frames, axis=0)
+    pad = np.repeat(frames[-1][np.newaxis, :, :], target_frames - num_frames, axis=0)
 
-    return np.concatenate([frames, pad], axis=0)  # (target_frames, 258)
+    return np.concatenate([frames, pad], axis=0)  # (target_frames, V, C)
 
 
 def crop_to_bbox(frame, bbox, expand=BBOX_EXPAND):
@@ -153,8 +143,9 @@ def process_video(
             f"No valid frames with detected keypoints: {video_path}"
         )
 
-        valid_frames = np.array(valid_frames)  # (T, 258)
-        output = sample_and_pad(valid_frames, target_frames)  # (target_frames, 258)
+        valid_frames = np.stack(valid_frames, axis=0)  # (T, 75, 3) = (T, V, C)
+        output = sample_and_pad(valid_frames, target_frames)  # (target_frames, 75, 3)
+        output = output.transpose(2, 0, 1)  # (3, target_frames, 75) = (C, T, V)
         out_path.parent.mkdir(parents=True, exist_ok=True)
         np.save(out_path, output)
         return True
@@ -238,13 +229,16 @@ the reduced WLASL dataset.
 
 - **Modality**: MediaPipe Holistic
 - **Keypoints included**:
-  - Pose (33 points): with visibility `(x, y, z, visibility)` (4 dims)
-  - Left hand (21 points): without visibility `(x, y, z)` (3 dims)
-  - Right hand (21 points): without visibility `(x, y, z)` (3 dims)
-- **Total keypoints**: 258 per frame
+  - Pose (33 points): `(x, y, z)` (4 dims)
+  - Left hand (21 points): `(x, y, z)` (3 dims)
+  - Right hand (21 points): `(x, y, z)` (3 dims)
 - **Frames per video**: {args.num_frames} (fixed length)
 
-Each feature file is stored as a NumPy array with shape: `({args.num_frames}, 258)`
+Each feature file is stored as a NumPy array with shape: `(C, T, V)` = `(3, {args.num_frames}, 75)`, where:
+
+- `C`: Coordinate dimensions (x, y, z)
+- `T`: Number of frames (fixed to {args.num_frames})
+- `V`: Number of keypoints (75 total)
 
 ## Preprocessing Details
 
@@ -260,7 +254,7 @@ Each feature file is stored as a NumPy array with shape: `({args.num_frames}, 25
 ```bash
 {out_root.as_posix()}/
 ├── <gloss_label>/
-│   ├── <video_id>.npy  # shape: ({args.num_frames}, 258)
+│   ├── <video_id>.npy  # shape: (3, {args.num_frames}, 75)
 │   ├── ...
 ├── warnings.txt # Optional: Warnings during extraction
 └── README.md
