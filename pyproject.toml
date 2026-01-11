@@ -13,6 +13,7 @@ dependencies = [
     "pandas>=2.3.3",
     "streamlit>=1.52.2",
     "tqdm>=4.67.1",
+    "video-features",
 ]
 
 [project.scripts]
@@ -26,8 +27,8 @@ build-backend = "uv_build"
 dev = ["ipykernel>=7.1.0", "ipywidgets>=8.1.8", "ruff>=0.14.11"]
 
 [project.optional-dependencies]
-cpu = ["torch>=2.9.0", "torchvision>=0.24.0"]
-cu130 = ["torch>=2.9.0", "torchvision>=0.24.0"]
+cpu = ["torch>=2.9.0", "torchvision>=0.24.0", "torchaudio>=2.9.0"]
+cu130 = ["torch>=2.9.0", "torchvision>=0.24.0", "torchaudio>=2.9.0"]
 
 [tool.uv]
 conflicts = [[{ extra = "cpu" }, { extra = "cu130" }]]
@@ -41,6 +42,7 @@ torchvision = [
     { index = "pytorch-cpu", extra = "cpu" },
     { index = "pytorch-cu130", extra = "cu130" },
 ]
+video-features = { git = "https://github.com/hongjiaherng/video_features.git" }
 
 [[tool.uv.index]]
 name = "pytorch-cpu"
