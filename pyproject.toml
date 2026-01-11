@@ -42,6 +42,10 @@ torchvision = [
     { index = "pytorch-cpu", extra = "cpu" },
     { index = "pytorch-cu130", extra = "cu130" },
 ]
+torchaudio = [
+    { index = "pytorch-cpu", extra = "cpu" },
+    { index = "pytorch-cu130", extra = "cu130" },
+]
 video-features = { git = "https://github.com/hongjiaherng/video_features.git" }
 
 [[tool.uv.index]]
