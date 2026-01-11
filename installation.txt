@@ -1,0 +1,7 @@
+pip install --upgrade gradio
+
+optional (last updated: 16/11/2025)
+pip install opencv-python
+pip install torch
+pip install transformers>=4.43.0
+pip install spaces
