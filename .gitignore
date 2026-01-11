@@ -19,3 +19,7 @@ data/*
 .DS_Store
 
 .venv/
+
+# pycache
+__pycache__/
+*.pyc
