@@ -58,7 +58,7 @@ data/
     │   └── README.md
     ├── features_kps/ # Keypoint features
     │   ├── accident/
-    │   │   ├── *.npy  # shape: (T, 258), where T is number of frames, 258 is number of keypoints (pose with visibility (4 dims) + hands without visibility (3 dims))
+    │   │   ├── *.npy  # shape: (C, T, V) = (3, T, 75), where T is number of frames, V is number of keypoints, C is coordinate dims (x,y,z)
     │   │   └── ...
     │   ├── bathroom/
     │   │   ├── *.npy
