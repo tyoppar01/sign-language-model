@@ -302,8 +302,7 @@ the reduced WLASL dataset.
 
 Each video is represented as a single NumPy array:
 
-- RGB only: `(1024,)`
-- RGB + Flow: `(2, 2048)`
+{"- RGB + Flow: `(2, 1024)`" if args.streams == "rgb+flow" else "- RGB only: `(1024,)`" if args.streams == "rgb" else "- Flow only: `(1024,)`"}
 
 ## Preprocessing Details
 

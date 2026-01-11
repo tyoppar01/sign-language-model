@@ -47,9 +47,18 @@ data/
     │   │   ├── *.mp4
     │   │   └── ...
     │   └── ...
-    ├── features_i3d/ # I3D features
+    ├── features_i3d_rgb_flow/ # I3D features rgb + flow (raft)
     │   ├── accident/
     │   │   ├── *.npy  # shape: (2, C) where 2 repreesents flow & rgb, C is feature dim (e.g., 1024)
+    │   │   └── ...
+    │   ├── bathroom/
+    │   │   ├── *.npy
+    │   │   └── ...
+    │   ├── ...
+    │   └── README.md
+    ├── features_i3d_rgb/ # I3D features with rgb only
+    │   ├── accident/
+    │   │   ├── *.npy  # shape: (C,) where C is feature dim (e.g., 1024)
     │   │   └── ...
     │   ├── bathroom/
     │   │   ├── *.npy
