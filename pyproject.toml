@@ -6,6 +6,8 @@ readme = "README.md"
 authors = [{ name = "hongjiaherng", email = "jiaherng2001@gmail.com" }]
 requires-python = ">=3.12"
 dependencies = [
+    "imageio>=2.37.2",
+    "imageio-ffmpeg>=0.6.0",
     "matplotlib>=3.10.8",
     "mediapipe==0.10.21",
     "numpy>=1.26.4",

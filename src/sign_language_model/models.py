@@ -115,16 +115,7 @@ class BiLSTMKeypoints(nn.Module):
 class I3DClassifier(nn.Module):
     def __init__(self, num_classes, input_dim=1024, dropout_p=0.1):
         super().__init__()
-        # self.net = nn.Sequential(
-        #     nn.LayerNorm(input_dim),
-        #     nn.Linear(input_dim, 512),
-        #     nn.ReLU(),
-        #     nn.Dropout(0.3),
-        #     nn.Linear(512, 256),
-        #     nn.ReLU(),
-        #     nn.Dropout(0.3),
-        #     nn.Linear(256, num_classes),
-        # )
+
         self.net = nn.Sequential(
             nn.LayerNorm(input_dim),
             nn.Dropout(dropout_p),  # Increased Dropout
@@ -141,23 +132,7 @@ class I3DClassifier(nn.Module):
 class RGBFlowClassifier(nn.Module):
     def __init__(self, num_classes, input_dim=1024, dropout_p=0.1):
         super().__init__()
-        # self.rgb_branch = nn.Sequential(
-        #     nn.LayerNorm(input_dim),
-        #     nn.Linear(input_dim, 256),
-        #     nn.ReLU(),
-        # )
-        # self.flow_branch = nn.Sequential(
-        #     nn.LayerNorm(input_dim),
-        #     nn.Linear(input_dim, 256),
-        #     nn.ReLU(),
-        # )
-        # self.fusion = nn.Sequential(
-        #     nn.Dropout(0.4),
-        #     nn.Linear(512, 256),
-        #     nn.ReLU(),
-        #     nn.Dropout(0.4),
-        #     nn.Linear(256, num_classes),
-        # )
+
         self.rgb_branch = nn.Sequential(
             nn.LayerNorm(input_dim),
             nn.Dropout(dropout_p),
