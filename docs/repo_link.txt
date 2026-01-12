@@ -1,0 +1,3 @@
+https://github.com/tyoppar01/sign-language-model
+https://huggingface.co/datasets/jherng/wlasl_reduced
+https://github.com/hongjiaherng/video_features
